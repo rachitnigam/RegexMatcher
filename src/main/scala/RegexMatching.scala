@@ -10,6 +10,7 @@ object RegexMatcher {
     case RSum(r1,RNothing) => reduce(r1)
     case RSeq(r1,REmpty) => reduce(r1)
     case RSeq(REmpty,r1) => reduce(r1)
+    case RSum(r1,r2) => if (r1 == r2) reduce(r1) else r
     case _ => r
   }
 
@@ -54,11 +55,7 @@ object RegexMatcher {
   }
 
   def main(args: Array[String]): Unit = {
-    val r = parse("a.b* + c*")
+    val r = parse("a.(b* + c*)")
     println(matches(r,"a"))
-    println(matches(r,"abb"))
-    println(matches(r,"c"))
-    println(matches(r,"ccc"))
   }
-
 }
