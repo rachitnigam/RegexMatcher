@@ -18,7 +18,7 @@ private class RParser extends RegexParsers with PackratParsers {
   lazy val parseAtom = parseLetter | "(" ~> parseSum <~ ")"
 
   lazy val parseRep: P[RExpr] = parseAtom <~ "*" ^^ {case w => RRep(w)} | parseAtom
-  lazy val parseSeq: P[RExpr] = parseSeq ~ "." ~ parseAtom ^^ {case r1 ~ _ ~ r2 => r1*r2} | parseRep
+  lazy val parseSeq: P[RExpr] = parseSeq ~ "." ~ parseRep ^^ {case r1 ~ _ ~ r2 => r1*r2} | parseRep
   lazy val parseSum: P[RExpr] = parseSum ~ "+" ~ parseSeq ^^ {case r1 ~ _ ~ r2 => r1+r2} | parseSeq
 
   def parse(str: String): RExpr = parseAll(parseSum,str) match {

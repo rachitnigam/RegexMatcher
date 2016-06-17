@@ -5,33 +5,6 @@ import RegexParser._
 
 object RegexMatcher {
   
-  def reduceSimple(r: RExpr): RExpr = r match {
-    case RSeq(RNothing,_) => RNothing
-    case RSeq(_,RNothing) => RNothing
-    case RSeq(r1,REmpty) => reduce(r1)
-    case RSeq(REmpty,r1) => reduce(r1)
-    case RSum(RNothing,r1) => reduce(r1)
-    case RSum(r1,RNothing) => reduce(r1)
-    case RSum(r1,r2) => if (r1 == r2) reduce(r1) else r
-    case RRep(r) => RRep(reduce(r))
-    case _ => r
-  }
-
-  def reduce(r: RExpr): RExpr = {
-    val reg = reduceSimple(r) 
-    reg match {
-    case RSeq(r1,r2) => {
-      val p = reduceSimple(reduce(r1)*reduce(r2))
-      if(p == reg) reg else reduce(p)
-    }
-    case RSum(r1,r2) => {
-      val p = reduceSimple(reduce(r1) + reduce(r2))
-      if(p == reg) reg else reduce(p)
-    }
-    case _ => reg
-  }
-  }
-
   def nullOf(r: RExpr): RExpr = r match {
     case REmpty => r
     case RNothing => r
